@@ -1,0 +1,76 @@
+name: marcador-fase3
+
+networks:
+  backend-net:
+
+volumes:
+  auth_sql_data:
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: auth-sql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Your_strong_Password123
+      - SA_PASSWORD=Your_strong_Password123
+    ports:
+      - "1433:1433"
+    volumes:
+      - auth_sql_data:/var/opt/mssql
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "bash -lc '</dev/tcp/localhost/1433' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+
+  auth-service:
+    build: ./auth-service/AuthService.Api
+    container_name: auth-service
+    environment:
+      - ConnectionStrings__Default=Server=sqlserver;Database=authdb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True
+      - JWT_ISSUER=https://auth.proyectoede.lat
+      - JWT_KID=key-2025-10
+      - JWT_PRIVATE_KEY_PATH=/run/secrets/jwt_private.pem
+    volumes:
+      - ./auth-service/keys/private.pem:/run/secrets/jwt_private.pem:ro
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    ports:
+      - "5040:5040"
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "bash -lc '</dev/tcp/localhost/5040' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+    restart: unless-stopped
+
+  runtime-service:
+    build: ./RuntimeService/RuntimeService.Api
+    container_name: runtime-service
+    environment:
+      - JWT_ISSUER=https://auth.proyectoede.lat
+      - AUTH_JWKS_URL=http://auth-service:5040/.well-known/jwks.json
+      - MATCHES_API_URL=http://matches-service:5031
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    ports:
+      - "5050:5050"
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD-SHELL", "bash -lc '</dev/tcp/localhost/5050' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
