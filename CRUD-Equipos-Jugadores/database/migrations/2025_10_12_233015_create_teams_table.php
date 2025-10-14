@@ -5,16 +5,17 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
-    {
-        Schema::create('teams', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->string('city')->nullable();
-            $table->string('logo_url')->nullable();
-            $table->timestamps();
-        });
-    }
+public function up(): void
+{
+    Schema::create('teams', function (Blueprint $table) {
+        $table->id();
+        $table->string('name', 150);
+        $table->string('city', 150);
+        $table->string('logo_url')->nullable();
+        $table->timestamps();
+        $table->unique(['name','city']);
+    });
+}
 
     public function down(): void
     {
