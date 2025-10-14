@@ -26,16 +26,14 @@ public class JwksController : ControllerBase
 
                     if (string.IsNullOrWhiteSpace(pem))
                         return StatusCode(500, new { error = "JWT private key not configured" });
-                    var kid = Environment.GetEnvironmentVariable("JWT_KID")!;
+
                     using var rsa = RSA.Create();
                     rsa.ImportFromPem(pem.ToCharArray());
                     var (n, e) = RsaKeyLoader.GetJwkParameters(rsa);
+                    var kid = Environment.GetEnvironmentVariable("JWT_KID")!;
 
-                    var jwk = new
-                    {
-                        keys = new[] { new { kty = "RSA", use = "sig", alg = "RS256", kid = Environment.GetEnvironmentVariable("JWT_KID")!, n, e } }
-                    };
-                    return new JsonResult(jwk);
+                    var obj = new { keys = new[] { new { kty = "RSA", use = "sig", alg = "RS256", kid, n, e } } };
+                    _json = System.Text.Json.JsonSerializer.Serialize(obj);
                 }
             }
         }

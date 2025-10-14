@@ -38,3 +38,4 @@ C:\UNIVERSIDAD\DesarrolloWeb\Proyectos\FaseIII\RuntimeService\RuntimeService.Api
 C:\UNIVERSIDAD\DesarrolloWeb\Proyectos\FaseIII\RuntimeService\RuntimeService.Api\obj\Debug\net8.0\RuntimeService.Api.pdb
 C:\UNIVERSIDAD\DesarrolloWeb\Proyectos\FaseIII\RuntimeService\RuntimeService.Api\obj\Debug\net8.0\RuntimeService.Api.genruntimeconfig.cache
 C:\UNIVERSIDAD\DesarrolloWeb\Proyectos\FaseIII\RuntimeService\RuntimeService.Api\obj\Debug\net8.0\ref\RuntimeService.Api.dll
+C:\UNIVERSIDAD\DesarrolloWeb\Proyectos\FaseIII\RuntimeService\RuntimeService.Api\obj\Debug\net8.0\RuntimeService.Api.sourcelink.json

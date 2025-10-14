@@ -44,14 +44,18 @@ public class AuthController : ControllerBase
         var (rsa, key) = RsaKeyLoader.Load(pem, kid);
 
         var roles = await _users.GetRolesAsync(user);
+
+        var now = DateTime.UtcNow;
+        var exp = now.AddHours(8);
+
         var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, user.Id),
-            new(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-            new(JwtRegisteredClaimNames.UniqueName, user.UserName ?? ""),
-        };
-        if (roles.Count > 0)
-            claims.Add(new Claim("roles", string.Join(",", roles)));
+{
+    new(JwtRegisteredClaimNames.Sub,        user.Id),
+    new(JwtRegisteredClaimNames.Email,      user.Email ?? ""),
+    new(JwtRegisteredClaimNames.UniqueName, user.UserName ?? "")
+};
+
+        if (roles.Count > 0) claims.Add(new Claim("roles", string.Join(",", roles)));
         foreach (var r in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, r));
@@ -63,13 +67,14 @@ public class AuthController : ControllerBase
             issuer: issuer,
             audience: null,
             claims: claims,
-            notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddHours(8),
+            notBefore: now,
+            expires: exp,      
             signingCredentials: creds
         );
 
         var token = new JwtSecurityTokenHandler().WriteToken(jwt);
         return Ok(new { access_token = token, token_type = "Bearer", expires_in = 8 * 3600, kid });
+
     }
 
     [Authorize]

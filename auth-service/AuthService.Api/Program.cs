@@ -1,4 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;           // 👈 importante
+
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using AuthService.Api.Auth;

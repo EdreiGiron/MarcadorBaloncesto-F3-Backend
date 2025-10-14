@@ -1,32 +1,21 @@
 {
   "version": 2,
-  "dgSpecHash": "tXMG7JJHkv0=",
+  "dgSpecHash": "uobe2mj+GBo=",
   "success": true,
   "projectFilePath": "C:\\UNIVERSIDAD\\DesarrolloWeb\\Proyectos\\FaseIII\\RuntimeService\\RuntimeService.Api\\RuntimeService.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\edrei\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.20\\microsoft.aspnetcore.authentication.jwtbearer.8.0.20.nupkg.sha512",
     "C:\\Users\\edrei\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.20\\microsoft.aspnetcore.openapi.8.0.20.nupkg.sha512",
-    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.abstractions\\7.7.0\\microsoft.identitymodel.abstractions.7.7.0.nupkg.sha512",
-    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\7.1.2\\microsoft.identitymodel.jsonwebtokens.7.1.2.nupkg.sha512",
-    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.logging\\7.7.0\\microsoft.identitymodel.logging.7.7.0.nupkg.sha512",
+    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.14.0\\microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
+    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.14.0\\microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512",
+    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.logging\\8.14.0\\microsoft.identitymodel.logging.8.14.0.nupkg.sha512",
     "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.protocols\\7.1.2\\microsoft.identitymodel.protocols.7.1.2.nupkg.sha512",
     "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\7.1.2\\microsoft.identitymodel.protocols.openidconnect.7.1.2.nupkg.sha512",
-    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.7.0\\microsoft.identitymodel.tokens.7.7.0.nupkg.sha512",
+    "C:\\Users\\edrei\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.14.0\\microsoft.identitymodel.tokens.8.14.0.nupkg.sha512",
     "C:\\Users\\edrei\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512",
-    "C:\\Users\\edrei\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.1.2\\system.identitymodel.tokens.jwt.7.1.2.nupkg.sha512"
+    "C:\\Users\\edrei\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.14.0\\system.identitymodel.tokens.jwt.8.14.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "message": "RuntimeService.Api depende de Microsoft.IdentityModel.Tokens (>= 7.6.4), pero no se encontró Microsoft.IdentityModel.Tokens 7.6.4. Microsoft.IdentityModel.Tokens 7.7.0 se resolvió en su lugar.",
-      "projectPath": "C:\\UNIVERSIDAD\\DesarrolloWeb\\Proyectos\\FaseIII\\RuntimeService\\RuntimeService.Api\\RuntimeService.Api.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\UNIVERSIDAD\\DesarrolloWeb\\Proyectos\\FaseIII\\RuntimeService\\RuntimeService.Api\\RuntimeService.Api.csproj",
-      "libraryId": "Microsoft.IdentityModel.Tokens",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }
