@@ -4,47 +4,52 @@ namespace App\Http\Controllers;
 
 use App\Models\Player;
 use Illuminate\Http\Request;
-use App\Http\Requests\PlayerStoreRequest;
-use App\Http\Requests\PlayerUpdateRequest;
 
 class PlayerController extends Controller
 {
-    public function index(Request $r)
+    public function index()
     {
-        $q = Player::query()->with('team:id,name');
-
-        if ($r->filled('teamId')) {
-            $q->where('team_id', $r->integer('teamId'));
-        }
-        if ($r->filled('search')) {
-            $s = $r->get('search');
-            $q->where('full_name','like',"%$s%");
-        }
-
-        return $q->orderBy('team_id')->orderBy('number')
-                 ->paginate($r->integer('per_page', 10));
-    }
-
-    public function store(PlayerStoreRequest $req)
-    {
-        $player = Player::create($req->validated());
-        return response()->json($player, 201);
+        return response()->json( Player::orderBy('id')->get() );
     }
 
     public function show(Player $player)
     {
-        return $player->load('team:id,name');
+        return response()->json( $player->load('team') );
     }
 
-    public function update(PlayerUpdateRequest $req, Player $player)
+    public function store(Request $request)
     {
-        $player->update($req->validated());
-        return $player->load('team:id,name');
+        $data = $request->validate([
+            'team_id'     => 'required|integer|exists:teams,id',
+            'full_name'   => 'required|string|max:200',
+            'number'      => 'required|integer|min:0',
+            'position'    => 'required|string|max:10',
+            'height'      => 'required|numeric',
+            'age'         => 'required|integer|min:0',
+            'nationality' => 'required|string|max:100',
+        ]);
+        $player = Player::create($data);
+        return response()->json($player, 201);
+    }
+
+    public function update(Request $request, Player $player)
+    {
+        $data = $request->validate([
+            'team_id'     => 'sometimes|integer|exists:teams,id',
+            'full_name'   => 'sometimes|string|max:200',
+            'number'      => 'sometimes|integer|min:0',
+            'position'    => 'sometimes|string|max:10',
+            'height'      => 'sometimes|numeric',
+            'age'         => 'sometimes|integer|min:0',
+            'nationality' => 'sometimes|string|max:100',
+        ]);
+        $player->fill($data)->save();
+        return response()->json($player);
     }
 
     public function destroy(Player $player)
     {
         $player->delete();
-        return response()->noContent();
+        return response()->json(['deleted' => true]);
     }
 }

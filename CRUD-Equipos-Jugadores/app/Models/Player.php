@@ -3,22 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Player extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'team_id','number','full_name','position','nationality','height_cm','weight_kg'
+        'team_id','full_name','number','position','height','age','nationality'
     ];
 
     protected $casts = [
-        'height_cm' => 'integer',
-        'weight_kg' => 'integer',
+        'number' => 'integer',
+        'age'    => 'integer',
+        'height' => 'float',
     ];
 
-    public function team(): BelongsTo
+    public function team()
     {
         return $this->belongsTo(Team::class);
     }
 }
+
 

@@ -4,40 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Team;
 use Illuminate\Http\Request;
-use App\Http\Requests\TeamStoreRequest;
-use App\Http\Requests\TeamUpdateRequest;
 
 class TeamController extends Controller
 {
-    public function index(Request $r)
+    public function index()
     {
-        $q = Team::query()
-            ->withCount('players')
-            ->when($r->get('search'), fn($qq,$s) => $qq->where('name','like',"%$s%"));
-
-        return $q->orderBy('name')->paginate($r->integer('per_page', 10));
-    }
-
-    public function store(TeamStoreRequest $req)
-    {
-        $team = Team::create($req->validated());
-        return response()->json($team, 201);
+        // si quieres incluir jugadores: Team::with('players')->get();
+        return response()->json( Team::orderBy('id')->get() );
     }
 
     public function show(Team $team)
     {
-        return $team->load('players');
+        return response()->json( $team->load('players') );
     }
 
-    public function update(TeamUpdateRequest $req, Team $team)
+    public function store(Request $request)
     {
-        $team->update($req->validated());
-        return $team;
+        $data = $request->validate([
+            'name'     => 'required|string|max:150',
+            'city'     => 'required|string|max:150',
+            'logo_url' => 'nullable|url',
+        ]);
+        $team = Team::create($data);
+        return response()->json($team, 201);
+    }
+
+    public function update(Request $request, Team $team)
+    {
+        $data = $request->validate([
+            'name'     => 'sometimes|string|max:150',
+            'city'     => 'sometimes|string|max:150',
+            'logo_url' => 'nullable|url',
+        ]);
+        $team->fill($data)->save();
+        return response()->json($team);
     }
 
     public function destroy(Team $team)
     {
         $team->delete();
-        return response()->noContent();
+        return response()->json(['deleted' => true]);
     }
 }
