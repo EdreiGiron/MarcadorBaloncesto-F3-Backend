@@ -28,6 +28,18 @@ public class ReportService {
         return getOrCreateReport(key, () -> externalClient.getPlayersByTeam(teamId));
     }
 
+
+    public byte[] generateMatchesReport(String from, String to) {
+        String key = "matches-" + from + "-" + to;
+        return getOrCreateReport(key, () -> externalClient.getMatches(from, to));
+    }
+
+    public byte[] generateRosterReport(int matchId) {
+        String key = "roster-" + matchId;
+        return getOrCreateReport(key, () -> externalClient.getRoster(matchId));
+    }
+
+
     private byte[] getOrCreateReport(String key, Supplier<List<?>> supplier) {
         var cache = repository.findByKey(key)
                 .filter(c -> c.getExpiresAt().isAfter(LocalDateTime.now()))

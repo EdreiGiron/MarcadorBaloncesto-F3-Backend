@@ -31,4 +31,17 @@ public class ExternalClient {
                 teamsUrl + "/api/players?teamId=" + teamId, PlayerDTO[].class);
         return Arrays.asList(Objects.requireNonNull(response.getBody()));
     }
+
+    public List<MatchCreateDTO> getMatches(String from, String to) {
+        ResponseEntity<MatchCreateDTO[]> response = restTemplate.getForEntity(
+                matchesUrl + "/api/matches?from=" + from + "&to=" + to, MatchCreateDTO[].class);
+        return Arrays.asList(Objects.requireNonNull(response.getBody()));
+    }
+
+    public List<RosterAssignDTO> getRoster(int matchId) {
+        ResponseEntity<RosterAssignDTO[]> response = restTemplate.getForEntity(
+                matchesUrl + "/api/roster?matchId=" + matchId, RosterAssignDTO[].class);
+        return Arrays.asList(Objects.requireNonNull(response.getBody()));
+    }
+
 }
