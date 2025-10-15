@@ -1,9 +1,9 @@
 package com.reports.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reports.Client.ExternalClient;
-import com.reports.Entity.ReportCache;
-import com.reports.Repository.ReportCacheRepository;
+import com.reports.client.ExternalClient;
+import com.reports.entity.ReportCache;
+import com.reports.repository.ReportCacheRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;

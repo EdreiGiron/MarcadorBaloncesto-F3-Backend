@@ -1,4 +1,4 @@
-package com.reports.Controller;
+package com.reports.controller;
 
 import com.reports.service.ReportService;
 import lombok.RequiredArgsConstructor;

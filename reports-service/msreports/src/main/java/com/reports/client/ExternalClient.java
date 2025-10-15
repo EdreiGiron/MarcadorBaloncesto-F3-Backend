@@ -1,6 +1,6 @@
-package com.reports.Client;
+package com.reports.client;
 
-import com.reports.Dto.*;
+import com.reports.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

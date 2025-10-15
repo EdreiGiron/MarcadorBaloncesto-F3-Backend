@@ -1,6 +1,6 @@
-package com.reports.Repository;
+package com.reports.repository;
 
-import com.reports.Entity.ReportCache;
+import com.reports.entity.ReportCache;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

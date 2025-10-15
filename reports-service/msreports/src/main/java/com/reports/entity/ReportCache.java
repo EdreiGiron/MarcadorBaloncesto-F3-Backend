@@ -1,4 +1,4 @@
-package com.reports.Entity;
+package com.reports.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

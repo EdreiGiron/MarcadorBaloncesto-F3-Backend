@@ -1,6 +1,6 @@
-package com.reports.Scheduler;
+package com.reports.scheduler;
 
-import com.reports.Repository.ReportCacheRepository;
+import com.reports.repository.ReportCacheRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

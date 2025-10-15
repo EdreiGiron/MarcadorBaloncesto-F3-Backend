@@ -1,4 +1,4 @@
-package com.reports.Dto;
+package com.reports.dto;
 
 import lombok.*;
 import java.util.List;
