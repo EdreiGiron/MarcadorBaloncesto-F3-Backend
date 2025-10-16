@@ -3,8 +3,10 @@ name: marcador-fase3
 networks:
   backend-net:
 
+
 volumes:
   auth_sql_data:
+
 
 services:
   sqlserver:
@@ -21,7 +23,7 @@ services:
     networks:
       - backend-net
     healthcheck:
-      test: ["CMD-SHELL", "bash -lc '</dev/tcp/localhost/1433' || exit 1"]
+      test: [ "CMD-SHELL", "bash -lc '</dev/tcp/localhost/1433' || exit 1" ]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -46,7 +48,7 @@ services:
     networks:
       - backend-net
     healthcheck:
-      test: ["CMD-SHELL", "bash -lc '</dev/tcp/localhost/5040' || exit 1"]
+      test: [ "CMD-SHELL", "bash -lc '</dev/tcp/localhost/5040' || exit 1" ]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -68,7 +70,32 @@ services:
     networks:
       - backend-net
     healthcheck:
-      test: ["CMD-SHELL", "bash -lc '</dev/tcp/localhost/5050' || exit 1"]
+      test: [ "CMD-SHELL", "bash -lc '</dev/tcp/localhost/5050' || exit 1" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  matches-service:
+    build: ./matches-service/MatchesService.Api
+    container_name: matches-service
+    environment:
+      - ConnectionStrings__Default=Server=sqlserver;Database=matchesdb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True
+      - JWT_ISSUER=https://auth.proyectoede.lat
+      - AUTH_JWKS_URL=http://auth-service:5040/.well-known/jwks.json 
+      - TEAMS_API_URL=http://teams-players-service:8000
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      sqlserver:
+        condition: service_healthy
+    ports:
+      - "5031:5031"
+    networks:
+      - backend-net
+    healthcheck:
+      test: [ "CMD-SHELL", "bash -lc '</dev/tcp/localhost/5031' || exit 1" ]
       interval: 10s
       timeout: 3s
       retries: 10

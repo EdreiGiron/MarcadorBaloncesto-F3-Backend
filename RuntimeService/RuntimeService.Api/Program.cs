@@ -18,11 +18,11 @@ builder.Services.AddCors(o => o.AddPolicy(allow, p =>
 
 builder.Services.AddSingleton<MatchStore>();
 
-var issuer  = Environment.GetEnvironmentVariable("JWT_ISSUER")    ?? builder.Configuration["JWT_ISSUER"]!;
+var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? builder.Configuration["JWT_ISSUER"]!;
 var jwksUrl = Environment.GetEnvironmentVariable("AUTH_JWKS_URL") ?? builder.Configuration["AUTH_JWKS_URL"]!;
 
 var http = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
-var jwksJson    = await http.GetStringAsync(jwksUrl);
+var jwksJson = await http.GetStringAsync(jwksUrl);
 var signingKeys = new JsonWebKeySet(jwksJson).GetSigningKeys();
 
 var tvp = new TokenValidationParameters
@@ -71,7 +71,14 @@ builder.Services
       };
   });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", p => p.RequireRole("Admin"));
+    options.AddPolicy("Scorer", p => p.RequireRole("Scorer", "Admin"));
+    options.AddPolicy("Viewer", p => p.RequireRole("Viewer", "Admin"));
+    options.AddPolicy("AnyAuthenticated", p => p.RequireAuthenticatedUser());
+});
+
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddHttpClient();
@@ -85,9 +92,10 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<MatchHub>("/api/runtime/hub");
 
-app.MapGet("/api/runtime/diag/versions", () => new {
+app.MapGet("/api/runtime/diag/versions", () => new
+{
     tokens = typeof(TokenValidationParameters).Assembly.FullName,
-    jwt    = typeof(JwtSecurityTokenHandler).Assembly.FullName,
+    jwt = typeof(JwtSecurityTokenHandler).Assembly.FullName,
     serverUtc = DateTime.UtcNow
 });
 app.MapGet("/", () => new { status = "ok", service = "runtime" });
