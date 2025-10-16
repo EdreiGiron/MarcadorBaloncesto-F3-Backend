@@ -6,6 +6,7 @@ networks:
 
 volumes:
   auth_sql_data:
+  teams_sql_data:
 
 
 services:
@@ -83,7 +84,7 @@ services:
     environment:
       - ConnectionStrings__Default=Server=sqlserver;Database=matchesdb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True
       - JWT_ISSUER=https://auth.proyectoede.lat
-      - AUTH_JWKS_URL=http://auth-service:5040/.well-known/jwks.json 
+      - AUTH_JWKS_URL=http://auth-service:5040/.well-known/jwks.json
       - TEAMS_API_URL=http://teams-players-service:8000
     depends_on:
       auth-service:
@@ -100,4 +101,80 @@ services:
       timeout: 3s
       retries: 10
       start_period: 10s
+    restart: unless-stopped
+
+  teams-mysql:
+    image: mysql:8.0
+    container_name: teams-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=teams_root_123
+      - MYSQL_DATABASE=teamsdb
+      - MYSQL_USER=teams_user
+      - MYSQL_PASSWORD=teams_pass_123
+    volumes:
+      - teams_sql_data:/var/lib/mysql
+    networks:
+      - backend-net
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -pteams_root_123 || exit 1" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+
+  teams_php:
+    build:
+      context: ./CRUD-Equipos-Jugadores
+      dockerfile: Dockerfile
+    container_name: teams-players-php
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=http://teams-players-service
+      - LOG_CHANNEL=stderr
+
+      - DB_CONNECTION=mysql
+      - DB_HOST=teams-mysql
+      - DB_PORT=3306
+      - DB_DATABASE=teamsdb
+      - DB_USERNAME=teams_user
+      - DB_PASSWORD=teams_pass_123
+
+      - JWT_ISSUER=https://auth.proyectoede.lat
+      - AUTH_JWKS_URL=http://auth-service:5040/.well-known/jwks.json
+
+      - CORS_ALLOWED_ORIGINS=*
+    depends_on:
+      teams-mysql:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+    networks:
+      - backend-net
+    healthcheck:
+      test: [ "CMD-SHELL", "php -r 'exit(extension_loaded(\"pdo_mysql\")?0:1);'" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  teams-players-service:
+    image: nginx:1.27-alpine
+    container_name: teams-players-service
+    depends_on:
+      teams_php:
+        condition: service_started
+    ports:
+      - "8000:80"
+    networks:
+      - backend-net
+    volumes:
+      - ./teams-players-service:/var/www/html:ro
+      - ./teams-players-service/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q -O - http://localhost/api/health | grep -q '\"status\":\"ok\"'" ]
+      interval: 15s
+      timeout: 5s
+      retries: 6
     restart: unless-stopped
