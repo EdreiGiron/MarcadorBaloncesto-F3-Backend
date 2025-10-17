@@ -1,7 +1,5 @@
-
 FROM composer:2 AS vendor
 WORKDIR /app
-
 
 COPY composer.json composer.lock ./
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
@@ -17,7 +15,7 @@ FROM php:8.3-fpm-alpine AS app
 WORKDIR /var/www/html
 
 RUN set -ex \
-    && apk add --no-cache bash icu-dev oniguruma-dev libzip-dev curl \
+    && apk add --no-cache bash icu-dev oniguruma-dev libzip-dev curl git procps \
     && docker-php-ext-install pdo_mysql opcache \
     && rm -rf /var/cache/apk/*
 
